@@ -51,7 +51,7 @@ def history(ticker,no_print,save_plot,plot,csv,excel):
 
 @cli.command()
 @argument("ticker")
-@option("-c","--crypto","crypto",is_flag=True)
+@option("-y","--crypto","crypto",is_flag=True)
 @option("-f","--format","_format",is_flag=True)
 def mcap(ticker,crypto,_format):
   ticker_object=Ticker(f"{ticker}-usd") if crypto else Ticker(ticker)
@@ -99,6 +99,21 @@ def qearnings(ticker,no_print,save_plot,plot,csv,excel):
     if csv: ticker_qearnings.to_csv(csv)
     if excel: ticker_qearnings.to_excel(excel)
   else: secho(f"""Ticker: "{ticker.upper()}" doesn't exists or doesn't have quarterly earnings!""",fg="red")
+
+@cli.command()
+@argument("ticker")
+@option("-n","-noprint","no_print",is_flag=True)
+@option("-c","--csv","csv",type=Path())
+@option("-x","--excel","excel",type=Path())
+def recommendations(ticker,no_print,csv,excel):
+  ticker_recommendations=Ticker(ticker).recommendations
+  if ticker_recommendations is not None:
+    if not no_print:
+        echo(f"{ticker.upper()} Recommendations")
+        echo(ticker_recommendations)
+    if csv: ticker_recommendations.to_csv(csv)
+    if excel: ticker_recommendations.to_excel(excel)
+  else: secho(f"""Ticker: "{ticker.upper()}" doesn't exists or doesn't have recommendations!""",fg="red")
 
 if __name__=="__main__":
   set_option("display.max_rows",None)
