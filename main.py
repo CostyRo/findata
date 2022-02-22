@@ -71,7 +71,7 @@ def news(ticker,_open):
 
 @cli.command()
 @argument("ticker")
-@option("-c","--crypto","crypto",is_flag=True)
+@option("-y","--crypto","crypto",is_flag=True)
 def stock(ticker,crypto):
   ticker_object=Ticker(f"{ticker}-usd") if crypto else Ticker(ticker)
   ticker_info=ticker_object.info
