@@ -62,10 +62,9 @@ def history(ticker,crypto,no_print,save_plot,plot,csv,excel):
 def mcap(ticker,crypto,_format):
   ticker_object=Ticker(f"{ticker}-usd") if crypto else Ticker(ticker)
   ticker_info=ticker_object.info
-  try:
-    market_cap=f"""{ticker_info["marketCap"]:,}""".replace(","," ") if _format else ticker_info["marketCap"]
-    echo(f"""Market cap of {ticker.upper()} is {market_cap}$""")
+  try: mcap_value=f"""{ticker_info["marketCap"]:,}""".replace(","," ") if _format else ticker_info["marketCap"]
   except KeyError: secho(f"""Ticker: "{ticker.upper()}" doesn't exists!""",fg="red")
+  else: echo(f"""Market cap of {ticker.upper()} is {mcap_value}$""")
 
 @cli.command()
 @argument("ticker")
