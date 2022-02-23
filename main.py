@@ -13,6 +13,18 @@ def cli():
   """"""
 
 @cli.command()
+@argument("option",required=False)
+@argument("new_value",required=False)
+def custom(option=None,new_value=None):
+  if option is None:
+    for key,value in settings.items(): echo(f"""Setting "{key}" have the value of "{value}".""")
+  elif new_value is None: echo(f"""Setting "{option}" "{settings[option]}".""")
+  else:
+    settings[option]=new_value
+    with open("settings.json","w") as f: dump_json(settings,f,indent=4)
+    echo(f"""Setting "{option} was changed to "{new_value}".""")
+
+@cli.command()
 @argument("ticker")
 @option("-n","--noprint","no_print",is_flag=True)
 @option("-p","--plot","plot",is_flag=True)
@@ -27,7 +39,7 @@ def earnings(ticker,no_print,save_plot,plot,csv,excel):
     if plot or save_plot: ticker_earnings.plot(title=f"{ticker.upper()} Earnings",kind="bar",logy=True,rot=0)
     if plot: plt.show()
     if save_plot: plt.savefig(f"{save_plot}.svg",format="svg",dpi=1200)
-    if csv: ticker_earnings.to_csv(csv)
+    if csv: ticker_earnings.to_csv(csv,settings["csv_separator"])
     if excel:
       excel=excel if excel.endswith(".xlsx") else excel+".xlsx"
       ticker_earnings.to_excel(excel)
@@ -51,7 +63,7 @@ def history(ticker,crypto,no_print,save_plot,plot,csv,excel):
       ticker_history.Volume.plot(title=f"{ticker.upper()} Stock Volume",kind="bar",logy=True)
     if plot: plt.show()
     if save_plot: plt.savefig(f"{save_plot}.svg",format="svg",dpi=1200)
-    if csv: ticker_history.to_csv(csv)
+    if csv: ticker_history.to_csv(csv,settings["csv_separator"])
     if excel:
       excel=excel if excel.endswith(".xlsx") else excel+".xlsx"
       ticker_history.to_excel(excel)
@@ -99,7 +111,7 @@ def qearnings(ticker,no_print,save_plot,plot,csv,excel):
     if plot or save_plot: ticker_qearnings.plot(title=f"{ticker.upper()} Quarterly Earnings",kind="bar",logy=True,rot=0)
     if plot: plt.show()
     if save_plot: plt.savefig(f"{save_plot}.svg",format="svg",dpi=1200)
-    if csv: ticker_qearnings.to_csv(csv)
+    if csv: ticker_qearnings.to_csv(csv,settings["csv_separator"])
     if excel:
       excel=excel if excel.endswith(".xlsx") else excel+".xlsx"
       ticker_qearnings.to_excel(excel)
@@ -115,24 +127,11 @@ def recommendations(ticker,no_print,csv,excel):
     if not no_print:
       echo(f"{ticker.upper()} Recommendations")
       echo(ticker_recommendations)
-    if csv: ticker_recommendations.to_csv(csv)
+    if csv: ticker_recommendations.to_csv(csv,settings["csv_separator"])
     if excel:
       excel=excel if excel.endswith(".xlsx") else excel+".xlsx"
       ticker_recommendations.to_excel(excel)
   else: secho(f"""Ticker: "{ticker.upper()}" doesn't exists or doesn't have recommendations!""",fg="red")
-
-@cli.command()
-@argument("option",required=False)
-@argument("new_value",required=False)
-def custom(option=None,new_value=None):
-  with open("settings.json","r") as f: settings=load_json(f)
-  if option is None:
-    for key,value in settings.items(): echo(f"""Setting "{key}" have the value of "{value}".""")
-  elif new_value is None: echo(f"""Setting "{option}" "{settings[option]}".""")
-  else:
-    settings[option]=new_value
-    with open("settings.json","w") as f: dump_json(settings,f,indent=4)
-    echo(f"""Setting "{option} was changed to "{new_value}".""")
 
 @cli.command()
 @argument("ticker")
