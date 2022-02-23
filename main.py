@@ -18,8 +18,7 @@ def cli():
 @option("-c","--csv","csv",type=Path())
 @option("-x","--excel","excel",type=Path())
 def earnings(ticker,no_print,save_plot,plot,csv,excel):
-  ticker_earnings=Ticker(ticker).earnings
-  if not ticker_earnings.empty:
+  if not ((ticker_earnings:=Ticker(ticker).earnings).empty):
     if not no_print:
         echo(f"{ticker.upper()} Earnings")
         echo(ticker_earnings)
@@ -41,8 +40,7 @@ def earnings(ticker,no_print,save_plot,plot,csv,excel):
 @option("-c","--csv","csv",type=Path())
 @option("-x","--excel","excel",type=Path())
 def history(ticker,crypto,no_print,save_plot,plot,csv,excel):
-  ticker_history=Ticker(f"{ticker}-usd").history() if crypto else Ticker(ticker).history()
-  if not ticker_history.empty:
+  if not ((ticker_history:=Ticker(ticker).history()).empty):
     if not no_print:
         echo(f"{ticker.upper()} History")
         echo(ticker_history)
@@ -95,8 +93,7 @@ def stock(ticker,crypto):
 @option("-c","--csv","csv",type=Path())
 @option("-x","--excel","excel",type=Path())
 def qearnings(ticker,no_print,save_plot,plot,csv,excel):
-  ticker_qearnings=Ticker(ticker).quarterly_earnings
-  if not ticker_qearnings.empty:
+  if not ((ticker_qearnings:=Ticker(ticker).quarterly_earnings).empty):
     if not no_print:
         echo(f"{ticker.upper()} Quarterly Earnings")
         echo(ticker_qearnings)
@@ -115,8 +112,7 @@ def qearnings(ticker,no_print,save_plot,plot,csv,excel):
 @option("-c","--csv","csv",type=Path())
 @option("-x","--excel","excel",type=Path())
 def recommendations(ticker,no_print,csv,excel):
-  ticker_recommendations=Ticker(ticker).recommendations
-  if ticker_recommendations is not None:
+  if (ticker_recommendations:=Ticker(ticker).recommendations) is not None:
     if not no_print:
         echo(f"{ticker.upper()} Recommendations")
         echo(ticker_recommendations)
