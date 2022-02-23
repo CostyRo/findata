@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-from matplotlib import rcParams
 
 from yfinance import Ticker
 from pandas import set_option
