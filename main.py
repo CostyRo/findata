@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from json import dump as dump_json, load as load_json
+
 from yfinance import Ticker
 from pandas import set_option
 import matplotlib.pyplot as plt
@@ -20,8 +22,8 @@ def cli():
 def earnings(ticker,no_print,save_plot,plot,csv,excel):
   if not ((ticker_earnings:=Ticker(ticker).earnings).empty):
     if not no_print:
-        echo(f"{ticker.upper()} Earnings")
-        echo(ticker_earnings)
+      echo(f"{ticker.upper()} Earnings")
+      echo(ticker_earnings)
     if plot or save_plot: ticker_earnings.plot(title=f"{ticker.upper()} Earnings",kind="bar",logy=True,rot=0)
     if plot: plt.show()
     if save_plot: plt.savefig(f"{save_plot}.svg",format="svg",dpi=1200)
@@ -42,8 +44,8 @@ def earnings(ticker,no_print,save_plot,plot,csv,excel):
 def history(ticker,crypto,no_print,save_plot,plot,csv,excel):
   if not ((ticker_history:=Ticker(ticker).history()).empty):
     if not no_print:
-        echo(f"{ticker.upper()} History")
-        echo(ticker_history)
+      echo(f"{ticker.upper()} History")
+      echo(ticker_history)
     if plot or save_plot:
       ticker_history.index=[str(i)[:10] for i in ticker_history.index]
       ticker_history.Volume.plot(title=f"{ticker.upper()} Stock Volume",kind="bar",logy=True)
@@ -58,11 +60,9 @@ def history(ticker,crypto,no_print,save_plot,plot,csv,excel):
 @cli.command()
 @argument("ticker")
 @option("-y","--crypto","crypto",is_flag=True)
-@option("-f","--format","_format",is_flag=True)
-def mcap(ticker,crypto,_format):
+def mcap(ticker,crypto):
   ticker_object=Ticker(f"{ticker}-usd") if crypto else Ticker(ticker)
-  ticker_info=ticker_object.info
-  try: mcap_value=f"""{ticker_info["marketCap"]:,}""".replace(","," ") if _format else ticker_info["marketCap"]
+  try: mcap_value=f"""{ticker_object.info["marketCap"]:,}""".replace(",",settings["number_separator"])
   except KeyError: secho(f"""Ticker: "{ticker.upper()}" doesn't exists!""",fg="red")
   else: echo(f"""Market cap of {ticker.upper()} is {mcap_value}$""")
 
@@ -94,8 +94,8 @@ def stock(ticker,crypto):
 def qearnings(ticker,no_print,save_plot,plot,csv,excel):
   if not ((ticker_qearnings:=Ticker(ticker).quarterly_earnings).empty):
     if not no_print:
-        echo(f"{ticker.upper()} Quarterly Earnings")
-        echo(ticker_qearnings)
+      echo(f"{ticker.upper()} Quarterly Earnings")
+      echo(ticker_qearnings)
     if plot or save_plot: ticker_qearnings.plot(title=f"{ticker.upper()} Quarterly Earnings",kind="bar",logy=True,rot=0)
     if plot: plt.show()
     if save_plot: plt.savefig(f"{save_plot}.svg",format="svg",dpi=1200)
@@ -113,13 +113,26 @@ def qearnings(ticker,no_print,save_plot,plot,csv,excel):
 def recommendations(ticker,no_print,csv,excel):
   if (ticker_recommendations:=Ticker(ticker).recommendations) is not None:
     if not no_print:
-        echo(f"{ticker.upper()} Recommendations")
-        echo(ticker_recommendations)
+      echo(f"{ticker.upper()} Recommendations")
+      echo(ticker_recommendations)
     if csv: ticker_recommendations.to_csv(csv)
     if excel:
       excel=excel if excel.endswith(".xlsx") else excel+".xlsx"
       ticker_recommendations.to_excel(excel)
   else: secho(f"""Ticker: "{ticker.upper()}" doesn't exists or doesn't have recommendations!""",fg="red")
+
+@cli.command()
+@argument("option",required=False)
+@argument("new_value",required=False)
+def custom(option=None,new_value=None):
+  with open("settings.json","r") as f: settings=load_json(f)
+  if option is None:
+    for key,value in settings.items(): echo(f"""Setting "{key}" have the value of "{value}".""")
+  elif new_value is None: echo(f"""Setting "{option}" "{settings[option]}".""")
+  else:
+    settings[option]=new_value
+    with open("settings.json","w") as f: dump_json(settings,f,indent=4)
+    echo(f"""Setting "{option} was changed to "{new_value}".""")
 
 @cli.command()
 @argument("ticker")
@@ -132,4 +145,5 @@ def whois(ticker,crypto):
 if __name__=="__main__":
   set_option("display.max_rows",None)
   rcParams.update({"figure.autolayout": True})
+  with open("settings.json","r") as f: settings=load_json(f)
   cli()
