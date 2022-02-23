@@ -84,10 +84,9 @@ def news(ticker,_open):
 def stock(ticker,crypto):
   ticker_object=Ticker(f"{ticker}-usd") if crypto else Ticker(ticker)
   ticker_info=ticker_object.info
-  try:
-    price=ticker_info["regularMarketPrice"] if crypto else ticker_info["currentPrice"]
-    echo(f"""{"Value" if crypto else "Stock"} of {ticker.upper()} is {price}$""")
+  try: price=ticker_info["regularMarketPrice"] if crypto else ticker_info["currentPrice"]
   except KeyError: secho(f"""Ticker: "{ticker.upper()}" doesn't exists!""",fg="red")
+  else: echo(f"""{"Value" if crypto else "Stock"} of {ticker.upper()} is {price}$""")
 
 @cli.command()
 @argument("ticker")
@@ -127,6 +126,14 @@ def recommendations(ticker,no_print,csv,excel):
       excel=excel if excel.endswith(".xlsx") else excel+".xlsx"
       ticker_recommendations.to_excel(excel)
   else: secho(f"""Ticker: "{ticker.upper()}" doesn't exists or doesn't have recommendations!""",fg="red")
+
+@cli.command()
+@argument("ticker")
+@option("-y","--crypto","crypto",is_flag=True)
+def whois(ticker,crypto):
+  try: ticker_name=Ticker(f"{ticker}-usd").info["name"] if crypto else Ticker(ticker).info["shortName"]
+  except KeyError: secho(f"""Ticker: "{ticker.upper()}" doesn't exists!""",fg="red")
+  else: echo(f"""Ticker: {ticker.upper()} is for {ticker_name}""")
 
 if __name__=="__main__":
   set_option("display.max_rows",None)
