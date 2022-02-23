@@ -71,8 +71,8 @@ def mcap(ticker,crypto,_format):
 @argument("ticker")
 @option("-o","--open","_open",is_flag=True)
 def news(ticker,_open):
-  for i,item in enumerate(Ticker(ticker).news):
-    echo(f"""News {i+1}:\n\tTitle: {item["title"]}\n\tPublisher: {item["publisher"]}\n\tLink: {item["link"]}\n""")
+  for i,item in enumerate(Ticker(ticker).news,1):
+    echo(f"""News {i}:\n\tTitle: {item["title"]}\n\tPublisher: {item["publisher"]}\n\tLink: {item["link"]}\n""")
     if _open: launch(item["link"])
 
 @cli.command()
