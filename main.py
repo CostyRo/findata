@@ -1,17 +1,24 @@
 #!/usr/bin/env python3
 
-from json import dump as dump_json, load as load_json
+from json import dump as dump_json,load as load_json
+# import json to save the settings
 
 from yfinance import Ticker
 from pandas import set_option
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
 from click import argument,echo,group,launch,option,Path,secho
+# import Ticker class from yfinance to get the data about tickers
+# import set_option from pandas to set the number of rows to infinite
+# import plotting from matplotlib and params to custom the plot
+# import everything is needed for this
 
+#define the cli and mark it as a group of commands
 @group()
 def cli():
   """"""
 
+# create command for custom the options of the app
 @cli.command()
 @argument("option",required=False)
 @argument("new_value",required=False)
