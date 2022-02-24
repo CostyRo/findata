@@ -48,9 +48,7 @@ def earnings(ticker,no_print,save_plot,plot,csv,excel):
   """"""
 
   if not ((ticker_earnings:=Ticker(ticker).earnings).empty):
-    if not no_print:
-      echo(f"{ticker.upper()} Earnings")
-      echo(ticker_earnings)
+    if not no_print: echo(f"{ticker.upper()} Earnings\n{ticker_earnings}")
 
     if plot or save_plot: ticker_earnings.plot(title=f"{ticker.upper()} Earnings",kind="bar",logy=True,rot=0)
 
@@ -80,15 +78,19 @@ def history(ticker,crypto,no_print,save_plot,plot,csv,excel):
   ticker_object=Ticker(f"{ticker}-usd") if crypto else Ticker(ticker)
 
   if not ((ticker_history:=ticker_object.history()).empty):
-    if not no_print:
-      echo(f"{ticker.upper()} History")
-      echo(ticker_history)
+    if not no_print: echo(f"{ticker.upper()} History\n{ticker_history}")
+
     if plot or save_plot:
       ticker_history.index=[str(i)[:10] for i in ticker_history.index]
+
       ticker_history.Volume.plot(title=f"{ticker.upper()} Stock Volume",kind="bar",logy=True)
+  
     if plot: plt.show()
+
     if save_plot: plt.savefig(f"{save_plot}.svg",format="svg",dpi=1200)
+
     if csv: ticker_history.to_csv(csv,settings["csv_separator"])
+
     if excel:
       excel=excel if excel.endswith(".xlsx") else excel+".xlsx"
       ticker_history.to_excel(excel)
@@ -145,9 +147,7 @@ def qearnings(ticker,no_print,save_plot,plot,csv,excel):
   """"""
 
   if not ((ticker_qearnings:=Ticker(ticker).quarterly_earnings).empty):
-    if not no_print:
-      echo(f"{ticker.upper()} Quarterly Earnings")
-      echo(ticker_qearnings)
+    if not no_print: echo(f"{ticker.upper()} Quarterly Earnings\n{ticker_qearnings}")
 
     if plot or save_plot: ticker_qearnings.plot(title=f"{ticker.upper()} Quarterly Earnings",kind="bar",logy=True,rot=0)
 
@@ -172,9 +172,7 @@ def recommendations(ticker,no_print,csv,excel):
   """"""
 
   if (ticker_recommendations:=Ticker(ticker).recommendations) is not None:
-    if not no_print:
-      echo(f"{ticker.upper()} Recommendations")
-      echo(ticker_recommendations)
+    if not no_print: echo(f"{ticker.upper()} Recommendations\n{ticker_recommendations}")
 
     if csv: ticker_recommendations.to_csv(csv,settings["csv_separator"])
 
