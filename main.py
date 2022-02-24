@@ -23,12 +23,17 @@ def cli():
 @argument("option",required=False)
 @argument("new_value",required=False)
 def custom(option=None,new_value=None):
+
+  """"""
+
   if option is None:
     for key,value in settings.items(): echo(f"""Setting "{key}" have the value of "{value}".""")
   elif new_value is None: echo(f"""Setting "{option}" "{settings[option]}".""")
   else:
     settings[option]=new_value
+
     with open("settings.json","w") as f: dump_json(settings,f,indent=4)
+
     echo(f"""Setting "{option} was changed to "{new_value}".""")
 
 @cli.command()
@@ -39,14 +44,22 @@ def custom(option=None,new_value=None):
 @option("-c","--csv","csv",type=Path())
 @option("-x","--excel","excel",type=Path())
 def earnings(ticker,no_print,save_plot,plot,csv,excel):
+
+  """"""
+
   if not ((ticker_earnings:=Ticker(ticker).earnings).empty):
     if not no_print:
       echo(f"{ticker.upper()} Earnings")
       echo(ticker_earnings)
+
     if plot or save_plot: ticker_earnings.plot(title=f"{ticker.upper()} Earnings",kind="bar",logy=True,rot=0)
+
     if plot: plt.show()
+
     if save_plot: plt.savefig(f"{save_plot}.svg",format="svg",dpi=1200)
+
     if csv: ticker_earnings.to_csv(csv,settings["csv_separator"])
+
     if excel:
       excel=excel if excel.endswith(".xlsx") else excel+".xlsx"
       ticker_earnings.to_excel(excel)
@@ -61,7 +74,12 @@ def earnings(ticker,no_print,save_plot,plot,csv,excel):
 @option("-c","--csv","csv",type=Path())
 @option("-x","--excel","excel",type=Path())
 def history(ticker,crypto,no_print,save_plot,plot,csv,excel):
-  if not ((ticker_history:=Ticker(ticker).history()).empty):
+
+  """"""
+
+  ticker_object=Ticker(f"{ticker}-usd") if crypto else Ticker(ticker)
+
+  if not ((ticker_history:=ticker_object.history()).empty):
     if not no_print:
       echo(f"{ticker.upper()} History")
       echo(ticker_history)
@@ -80,7 +98,11 @@ def history(ticker,crypto,no_print,save_plot,plot,csv,excel):
 @argument("ticker")
 @option("-y","--crypto","crypto",is_flag=True)
 def mcap(ticker,crypto):
+
+  """"""
+
   ticker_object=Ticker(f"{ticker}-usd") if crypto else Ticker(ticker)
+
   try: mcap_value=f"""{ticker_object.info["marketCap"]:,}""".replace(",",settings["number_separator"])
   except KeyError: secho(f"""Ticker: "{ticker.upper()}" doesn't exists!""",fg="red")
   else: echo(f"""Market cap of {ticker.upper()} is {mcap_value}$""")
@@ -89,16 +111,24 @@ def mcap(ticker,crypto):
 @argument("ticker")
 @option("-o","--open","_open",is_flag=True)
 def news(ticker,_open):
+
+  """"""
+
   for i,item in enumerate(Ticker(ticker).news,1):
     echo(f"""News {i}:\n\tTitle: {item["title"]}\n\tPublisher: {item["publisher"]}\n\tLink: {item["link"]}\n""")
+
     if _open: launch(item["link"])
 
 @cli.command()
 @argument("ticker")
 @option("-y","--crypto","crypto",is_flag=True)
 def stock(ticker,crypto):
+
+  """"""
+
   ticker_object=Ticker(f"{ticker}-usd") if crypto else Ticker(ticker)
   ticker_info=ticker_object.info
+
   try: price=ticker_info["regularMarketPrice"] if crypto else ticker_info["currentPrice"]
   except KeyError: secho(f"""Ticker: "{ticker.upper()}" doesn't exists!""",fg="red")
   else: echo(f"""{"Value" if crypto else "Stock"} of {ticker.upper()} is {price}$""")
@@ -111,14 +141,22 @@ def stock(ticker,crypto):
 @option("-c","--csv","csv",type=Path())
 @option("-x","--excel","excel",type=Path())
 def qearnings(ticker,no_print,save_plot,plot,csv,excel):
+
+  """"""
+
   if not ((ticker_qearnings:=Ticker(ticker).quarterly_earnings).empty):
     if not no_print:
       echo(f"{ticker.upper()} Quarterly Earnings")
       echo(ticker_qearnings)
+
     if plot or save_plot: ticker_qearnings.plot(title=f"{ticker.upper()} Quarterly Earnings",kind="bar",logy=True,rot=0)
+
     if plot: plt.show()
+
     if save_plot: plt.savefig(f"{save_plot}.svg",format="svg",dpi=1200)
+
     if csv: ticker_qearnings.to_csv(csv,settings["csv_separator"])
+
     if excel:
       excel=excel if excel.endswith(".xlsx") else excel+".xlsx"
       ticker_qearnings.to_excel(excel)
@@ -130,11 +168,16 @@ def qearnings(ticker,no_print,save_plot,plot,csv,excel):
 @option("-c","--csv","csv",type=Path())
 @option("-x","--excel","excel",type=Path())
 def recommendations(ticker,no_print,csv,excel):
+
+  """"""
+
   if (ticker_recommendations:=Ticker(ticker).recommendations) is not None:
     if not no_print:
       echo(f"{ticker.upper()} Recommendations")
       echo(ticker_recommendations)
+
     if csv: ticker_recommendations.to_csv(csv,settings["csv_separator"])
+
     if excel:
       excel=excel if excel.endswith(".xlsx") else excel+".xlsx"
       ticker_recommendations.to_excel(excel)
@@ -144,6 +187,9 @@ def recommendations(ticker,no_print,csv,excel):
 @argument("ticker")
 @option("-y","--crypto","crypto",is_flag=True)
 def whois(ticker,crypto):
+
+  """"""
+
   try: ticker_name=Ticker(f"{ticker}-usd").info["name"] if crypto else Ticker(ticker).info["shortName"]
   except KeyError: secho(f"""Ticker: "{ticker.upper()}" doesn't exists!""",fg="red")
   else: echo(f"""Ticker: {ticker.upper()} is for {ticker_name}""")
