@@ -11,7 +11,10 @@ from click import argument,echo,group,launch,option,Path,secho
 # import Ticker class from yfinance to get the data about tickers
 # import plotting from matplotlib and params to custom the plot
 # import set_option from pandas to set the number of rows to infinite
-# import everything from click is needed to make this app
+# import everything is needed from click to make this app
+
+from func import plotting,print_frame,save_frame
+# import necessary functions from my function module
 
 #define the cli and mark it as a group of commands
 @group()
@@ -55,17 +58,14 @@ def earnings(ticker,no_print,plot,save_plot,csv,excel):
 
   # verify if earnings exists
   if not ((ticker_earnings:=Ticker(ticker).earnings).empty):
-    if not no_print: echo(f"{ticker.upper()} Earnings\n{ticker_earnings}")
-    # if the user didn't disable the printing, print the earnings
+    print_frame(ticker,no_print,ticker_earnings,"Earnings")
+    # print_frame what is needed
 
     if plot or save_plot: ticker_earnings.plot(title=f"{ticker.upper()} Earnings",kind="bar",logy=True,rot=0)
     # if the user wants plotting, load the plot
 
-    if plot: plt.show()
-    # if the user wants, show the plot
-
-    if save_plot: plt.savefig(f"{save_plot}.svg",format="svg",dpi=1200)
-    # if the user wants, save the plot as a svg file
+    plotting(plot,save_plot)
+    # handle plotting commands
 
     if csv: ticker_earnings.to_csv(csv,settings["csv_separator"])
     # if the user wants, save earnings into a csv
@@ -93,8 +93,8 @@ def history(ticker,crypto,no_print,plot,save_plot,csv,excel):
 
   # verify if history exists
   if not ticker_history.empty:
-    if not no_print: echo(f"{ticker.upper()} History\n{ticker_history}")
-    # if the user didn't disable the printing, print the history
+    print_frame(ticker,no_print,ticker_history,"History")
+    # print_frame what is needed
 
     # if the user wants plotting, load the plot
     if plot or save_plot:
@@ -104,11 +104,8 @@ def history(ticker,crypto,no_print,plot,save_plot,csv,excel):
       ticker_history.Volume.plot(title=f"{ticker.upper()} Stock Volume",kind="bar",logy=True)
       # load only the column with volume as a plot
 
-    if plot: plt.show()
-    # if the user wants, show the plot
-
-    if save_plot: plt.savefig(f"{save_plot}.svg",format="svg",dpi=1200)
-    # if the user wants, save the plot as a svg file
+    plotting(plot,save_plot)
+    # handle plotting commands
 
     if csv: ticker_history.to_csv(csv,settings["csv_separator"])
     # if the user wants, save history into a csv
@@ -181,17 +178,14 @@ def qearnings(ticker,no_print,plot,save_plot,csv,excel):
 
   # verify if quarterly earnings exists
   if not ((ticker_qearnings:=Ticker(ticker).quarterly_earnings).empty):
-    if not no_print: echo(f"{ticker.upper()} Quarterly Earnings\n{ticker_qearnings}")
-    # if the user didn't disable the printing, print the quarterly earnings
+    print_frame(ticker,no_print,ticker_qearnings,"Quarterly Earnings")
+    # print_frame what is needed
 
     if plot or save_plot: ticker_qearnings.plot(title=f"{ticker.upper()} Quarterly Earnings",kind="bar",logy=True,rot=0)
     # if the user wants plotting, load the plot
 
-    if plot: plt.show()
-    # if the user wants, show the plot
-
-    if save_plot: plt.savefig(f"{save_plot}.svg",format="svg",dpi=1200)
-    # if the user wants, save the plot as a svg file
+    plotting(plot,save_plot)
+    # handle plotting commands
 
     if csv: ticker_qearnings.to_csv(csv,settings["csv_separator"])
     # if the user wants, save quarterly earnings into a csv
@@ -213,8 +207,8 @@ def recommendations(ticker,no_print,csv,excel):
 
   # verify if recommendations exists
   if (ticker_recommendations:=Ticker(ticker).recommendations) is not None:
-    if not no_print: echo(f"{ticker.upper()} Recommendations\n{ticker_recommendations}")
-    # print the recommendations if the user didn't disable the printing
+    print_frame(ticker,no_print,ticker_recommendations,"Recommendations")
+    # print_frame what is needed
 
     if csv: ticker_recommendations.to_csv(csv,settings["csv_separator"])
     # if the user wants, save recommendations into a csv
