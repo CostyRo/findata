@@ -42,7 +42,7 @@ def custom(option=None,new_value=None):
     # update the settings
 
     echo(f"""Setting "{option} was changed to "{new_value}".""")
-    # announce that the value was changed
+    # announce user that the value was changed
 
 # create the command for getting the earnings of a ticker
 @cli.command()
@@ -59,7 +59,7 @@ def earnings(ticker,no_print,plot,save_plot,csv,excel):
   # verify if earnings exists
   if not ((ticker_earnings:=Ticker(ticker).earnings).empty):
     print_frame(ticker,no_print,ticker_earnings,"Earnings")
-    # print_frame what is needed
+    # print what is needed
 
     if plot or save_plot: ticker_earnings.plot(title=f"{ticker.upper()} Earnings",kind="bar",logy=True,rot=0)
     # if the user wants plotting, load the plot
@@ -67,11 +67,8 @@ def earnings(ticker,no_print,plot,save_plot,csv,excel):
     plotting(plot,save_plot)
     # handle plotting commands
 
-    if csv: ticker_earnings.to_csv(csv,settings["csv_separator"])
-    # if the user wants, save earnings into a csv
-
-    if excel: ticker_earnings.to_excel(excel if excel.endswith(".xlsx") else excel+".xlsx")
-    # if the user wants, save earnings into a excel
+    save_frame(ticker_earnings,csv,excel,settings["csv_separator"])
+    # handle saving commands
   else: secho(f"""Ticker: "{ticker.upper()}" doesn't exists or doesn't have earnings!""",fg="red")
   # otherwise show an error that earnings didn't exists
 
@@ -94,7 +91,7 @@ def history(ticker,crypto,no_print,plot,save_plot,csv,excel):
   # verify if history exists
   if not ticker_history.empty:
     print_frame(ticker,no_print,ticker_history,"History")
-    # print_frame what is needed
+    # print what is needed
 
     # if the user wants plotting, load the plot
     if plot or save_plot:
@@ -107,11 +104,8 @@ def history(ticker,crypto,no_print,plot,save_plot,csv,excel):
     plotting(plot,save_plot)
     # handle plotting commands
 
-    if csv: ticker_history.to_csv(csv,settings["csv_separator"])
-    # if the user wants, save history into a csv
-
-    if excel: ticker_history.to_excel(excel if excel.endswith(".xlsx") else excel+".xlsx")
-    # if the user wants, save history into a excel
+    save_frame(ticker_history,csv,excel,settings["csv_separator"])
+    # handle saving commands
   else: secho(f"""Ticker: "{ticker.upper()}" doesn't exists or doesn't have history!""",fg="red")
   # otherwise show an error that history didn't exists
 
@@ -179,7 +173,7 @@ def qearnings(ticker,no_print,plot,save_plot,csv,excel):
   # verify if quarterly earnings exists
   if not ((ticker_qearnings:=Ticker(ticker).quarterly_earnings).empty):
     print_frame(ticker,no_print,ticker_qearnings,"Quarterly Earnings")
-    # print_frame what is needed
+    # print what is needed
 
     if plot or save_plot: ticker_qearnings.plot(title=f"{ticker.upper()} Quarterly Earnings",kind="bar",logy=True,rot=0)
     # if the user wants plotting, load the plot
@@ -187,11 +181,8 @@ def qearnings(ticker,no_print,plot,save_plot,csv,excel):
     plotting(plot,save_plot)
     # handle plotting commands
 
-    if csv: ticker_qearnings.to_csv(csv,settings["csv_separator"])
-    # if the user wants, save quarterly earnings into a csv
-
-    if excel: ticker_qearnings.to_excel(excel if excel.endswith(".xlsx") else excel+".xlsx")
-    # if the user wants, save quarterly earnings into a excel
+    save_frame(ticker_qearnings,csv,excel,settings["csv_separator"])
+    # handle saving commands
   else: secho(f"""Ticker: "{ticker.upper()}" doesn't exists or doesn't have quarterly earnings!""",fg="red")
   # otherwise show an error that quarterly earnings didn't exists
 
@@ -208,13 +199,10 @@ def recommendations(ticker,no_print,csv,excel):
   # verify if recommendations exists
   if (ticker_recommendations:=Ticker(ticker).recommendations) is not None:
     print_frame(ticker,no_print,ticker_recommendations,"Recommendations")
-    # print_frame what is needed
+    # print what is needed
 
-    if csv: ticker_recommendations.to_csv(csv,settings["csv_separator"])
-    # if the user wants, save recommendations into a csv
-
-    if excel: ticker_recommendations.to_excel(excel if excel.endswith(".xlsx") else excel+".xlsx")
-    # if the user wants, save recommendations into a excel
+    save_frame(ticker_recommendations,csv,excel,settings["csv_separator"])
+    # handle saving commands
   else: secho(f"""Ticker: "{ticker.upper()}" doesn't exists or doesn't have recommendations!""",fg="red")
   # otherwise show an error that recommendations didn't exists
 
