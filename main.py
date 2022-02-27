@@ -4,16 +4,15 @@ from json import dump as dump_json,load as load_json
 # import json to save the settings
 
 from yfinance import Ticker
-import matplotlib.pyplot as plt
 from matplotlib import rcParams
 from pandas import set_option as set_pandas_option
-from click import argument,echo,group,launch,option,Path,secho
+from click import argument,echo,group,launch,option,Path
 # import Ticker class from yfinance to get the data about tickers
-# import plotting from matplotlib and params to custom the plot
+# import params from matplotlib to custom the plot
 # import set_option from pandas to set the number of rows to infinite
 # import everything is needed from click to make this app
 
-from func import plotting,print_frame,save_frame
+from func import plotting,print_error,print_frame,save_frame
 # import necessary functions from my function module
 
 #define the cli and mark it as a group of commands
@@ -69,7 +68,7 @@ def earnings(ticker,no_print,plot,save_plot,csv,excel):
 
     save_frame(ticker_earnings,csv,excel,settings["csv_separator"])
     # handle saving commands
-  else: secho(f"""Ticker: "{ticker.upper()}" doesn't exists or doesn't have earnings!""",fg="red")
+  else: print_error(f"""Ticker: "{ticker.upper()}" doesn't exists or doesn't have earnings!""")
   # otherwise show an error that earnings didn't exists
 
 # create the command for getting the history of a ticker
@@ -106,7 +105,7 @@ def history(ticker,crypto,no_print,plot,save_plot,csv,excel):
 
     save_frame(ticker_history,csv,excel,settings["csv_separator"])
     # handle saving commands
-  else: secho(f"""Ticker: "{ticker.upper()}" doesn't exists or doesn't have history!""",fg="red")
+  else: print_error(f"""Ticker: "{ticker.upper()}" doesn't exists or doesn't have history!""")
   # otherwise show an error that history didn't exists
 
 # create the command for getting the market cap of a ticker
@@ -121,7 +120,7 @@ def mcap(ticker,crypto):
   # save the info about the ticker in a dictionary
 
   try: mcap_value=f"""{ticker_info["marketCap"]:,}""".replace(",",settings["number_separator"])
-  except KeyError: secho(f"""Ticker: "{ticker.upper()}" doesn't exists!""",fg="red")
+  except KeyError: print_error(f"""Ticker: "{ticker.upper()}" doesn't exists!""")
   else: echo(f"""Market cap of {ticker.upper()} is {mcap_value}$""")
   # try to acces the market cap and print the value
   # if a error is occurred, announce the user that the ticker doesn't exists
@@ -153,7 +152,7 @@ def stock(ticker,crypto):
   # save the info about the ticker in a dictionary
 
   try: price=ticker_info["regularMarketPrice"] if crypto else ticker_info["currentPrice"]
-  except KeyError: secho(f"""Ticker: "{ticker.upper()}" doesn't exists!""",fg="red")
+  except KeyError: print_error(f"""Ticker: "{ticker.upper()}" doesn't exists!""")
   else: echo(f"""{"Value" if crypto else "Stock"} of {ticker.upper()} is {price}$""")
   # try to acces the price and print the value
   # if a error is occurred, announce the user that the ticker doesn't exists
@@ -183,7 +182,7 @@ def qearnings(ticker,no_print,plot,save_plot,csv,excel):
 
     save_frame(ticker_qearnings,csv,excel,settings["csv_separator"])
     # handle saving commands
-  else: secho(f"""Ticker: "{ticker.upper()}" doesn't exists or doesn't have quarterly earnings!""",fg="red")
+  else: print_error(f"""Ticker: "{ticker.upper()}" doesn't exists or doesn't have quarterly earnings!""")
   # otherwise show an error that quarterly earnings didn't exists
 
 # create the command for getting the recommendations maded for a ticker
@@ -203,7 +202,7 @@ def recommendations(ticker,no_print,csv,excel):
 
     save_frame(ticker_recommendations,csv,excel,settings["csv_separator"])
     # handle saving commands
-  else: secho(f"""Ticker: "{ticker.upper()}" doesn't exists or doesn't have recommendations!""",fg="red")
+  else: print_error(f"""Ticker: "{ticker.upper()}" doesn't exists or doesn't have recommendations!""")
   # otherwise show an error that recommendations didn't exists
 
 # create the command for getting the name of a ticker
@@ -215,7 +214,7 @@ def whois(ticker,crypto):
   """"""
 
   try: ticker_name=Ticker(f"{ticker}-usd").info["name"] if crypto else Ticker(ticker).info["shortName"]
-  except KeyError: secho(f"""Ticker: "{ticker.upper()}" doesn't exists!""",fg="red")
+  except KeyError: print_error(f"""Ticker: "{ticker.upper()}" doesn't exists!""")
   else: echo(f"""Ticker: {ticker.upper()} is for {ticker_name}""")
   # try to acces the name of the ticker and print the value
   # if a error is occurred, announce the user that the ticker doesn't exists

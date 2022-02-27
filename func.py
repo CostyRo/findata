@@ -1,6 +1,7 @@
-from click import echo
+from click import echo,secho
 import matplotlib.pyplot as plt
 # import echo from click to display messages
+# import plotting from matplotlib
 
 # function for showing and saving the plot of the data frame
 def plotting(plot,save_plot):
@@ -11,6 +12,12 @@ def plotting(plot,save_plot):
 
   if save_plot: plt.savefig(f"{save_plot}.svg",format="svg",dpi=1200)
   # if the user wants, save the plot as a svg file
+
+def print_error(text):
+
+  """"""
+
+  secho(text,fg="red")
 
 # function for printing the data frame
 def print_frame(ticker,no_print,data_frame,title):
