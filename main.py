@@ -18,15 +18,25 @@ from func import plotting,print_error,print_frame,save_frame
 #define the cli and mark it as a group of commands
 @group()
 def cli():
-  """"""
+  """
+  A simple app for getting the financial data from yahoo finance
+  """
 
 # create the command for custom the options of the app
-@cli.command()
+@cli.command(short_help="Custom the varibles of the app")
 @argument("option",required=False)
 @argument("new_value",required=False)
 def custom(option=None,new_value=None):
 
-  """"""
+  """
+  Custom the varibles of the app
+
+  OPTION is the option that you want to change
+  NEW_VALUE is the new value for the given option
+
+  No NEW_VALUE will print the value of the OPTION
+  No OPTION will print all the option and their values
+  """
 
   if option is None:
     for key,value in settings.items(): echo(f"""Setting "{key}" have the value of "{value}".""")
@@ -44,7 +54,7 @@ def custom(option=None,new_value=None):
     # announce user that the value was changed
 
 # create the command for getting the earnings of a ticker
-@cli.command()
+@cli.command(short_help="Get the earnings of a company")
 @argument("ticker")
 @option("-n","--noprint","no_print",is_flag=True)
 @option("-p","--plot","plot",is_flag=True)
@@ -53,7 +63,16 @@ def custom(option=None,new_value=None):
 @option("-x","--excel","excel",type=Path())
 def earnings(ticker,no_print,plot,save_plot,csv,excel):
 
-  """"""
+  """
+  Get the earnings of a company
+
+  TICKER is the ticker that you want to track
+  NOPRINT is for disable the printing of the data
+  PLOT is for plotting the data
+  SAVEPLOT is for saving the plot as a svg image
+  CSV is for saving the data in a csv file
+  EXCEL is for saving the data in a excel file
+  """
 
   # verify if earnings exists
   if not ((ticker_earnings:=Ticker(ticker).earnings).empty):
@@ -72,7 +91,7 @@ def earnings(ticker,no_print,plot,save_plot,csv,excel):
   # otherwise show an error that earnings didn't exists
 
 # create the command for getting the history of a ticker
-@cli.command()
+@cli.command(short_help="Get the history of a company or a cryptocurrency")
 @argument("ticker")
 @option("-y","--crypto","crypto",is_flag=True)
 @option("-n","--noprint","no_print",is_flag=True)
@@ -82,7 +101,17 @@ def earnings(ticker,no_print,plot,save_plot,csv,excel):
 @option("-x","--excel","excel",type=Path())
 def history(ticker,crypto,no_print,plot,save_plot,csv,excel):
 
-  """"""
+  """
+  Get the history of a company or a cryptocurrency
+
+  TICKER is the ticker that you want to track
+  CRYPTO is for enable the tickers for cryptocurrencies
+  NOPRINT is for disable the printing of the data
+  PLOT is for plotting the data
+  SAVEPLOT is for saving the plot as a svg image
+  CSV is for saving the data in a csv file
+  EXCEL is for saving the data in a excel file
+  """
 
   ticker_history=(Ticker(f"{ticker}-usd") if crypto else Ticker(ticker)).history()
   # save the history about the ticker in a dictionary
@@ -109,12 +138,16 @@ def history(ticker,crypto,no_print,plot,save_plot,csv,excel):
   # otherwise show an error that history didn't exists
 
 # create the command for getting the market cap of a ticker
-@cli.command()
+@cli.command(short_help="Get the market cap of a company or a cryptocurrency")
 @argument("ticker")
 @option("-y","--crypto","crypto",is_flag=True)
 def mcap(ticker,crypto):
 
-  """"""
+  """
+  Get the market cap of a company or a cryptocurrency
+
+  CRYPTO is for enable the tickers for cryptocurrencies
+  """
 
   ticker_info=(Ticker(f"{ticker}-usd") if crypto else Ticker(ticker)).info
   # save the info about the ticker in a dictionary
@@ -126,12 +159,16 @@ def mcap(ticker,crypto):
   # if a error is occurred, announce the user that the ticker doesn't exists
 
 # create the command for getting the news of a ticker
-@cli.command()
+@cli.command(short_help="Get the financial news for the given word")
 @argument("ticker")
 @option("-o","--open","_open",is_flag=True)
 def news(ticker,_open):
 
-  """"""
+  """
+  Get the financial news for the given word
+
+  OPEN is for opening the news in the default browser
+  """
 
   for i,item in enumerate(Ticker(ticker).news,1):
     echo(f"""News {i}:\n\tTitle: {item["title"]}\n\tPublisher: {item["publisher"]}\n\tLink: {item["link"]}\n""")
@@ -141,12 +178,16 @@ def news(ticker,_open):
     # if user want open the news in the browser
 
 # create the command for getting the stock/price of a ticker
-@cli.command()
+@cli.command(short_help="Get the price of a stock or the price of a cryptocurrency")
 @argument("ticker")
 @option("-y","--crypto","crypto",is_flag=True)
 def stock(ticker,crypto):
 
-  """"""
+  """
+  Get the price of a stock or the price of a cryptocurrency
+
+  CRYPTO is for enable the tickers for cryptocurrencies
+  """
 
   ticker_info=(Ticker(f"{ticker}-usd") if crypto else Ticker(ticker)).info
   # save the info about the ticker in a dictionary
@@ -158,7 +199,7 @@ def stock(ticker,crypto):
   # if a error is occurred, announce the user that the ticker doesn't exists
 
 # create the command for getting the quarterly earnings of a ticker
-@cli.command()
+@cli.command(short_help="Get the quarterly earnings of a company")
 @argument("ticker")
 @option("-n","--noprint","no_print",is_flag=True)
 @option("-p","--plot","plot",is_flag=True)
@@ -167,7 +208,16 @@ def stock(ticker,crypto):
 @option("-x","--excel","excel",type=Path())
 def qearnings(ticker,no_print,plot,save_plot,csv,excel):
 
-  """"""
+  """
+  Get the quarterly earnings of a company
+
+  TICKER is the ticker that you want to track
+  NOPRINT is for disable the printing of the data
+  PLOT is for plotting the data
+  SAVEPLOT is for saving the plot as a svg image
+  CSV is for saving the data in a csv file
+  EXCEL is for saving the data in a excel file
+  """
 
   # verify if quarterly earnings exists
   if not ((ticker_qearnings:=Ticker(ticker).quarterly_earnings).empty):
@@ -186,14 +236,21 @@ def qearnings(ticker,no_print,plot,save_plot,csv,excel):
   # otherwise show an error that quarterly earnings didn't exists
 
 # create the command for getting the recommendations maded for a ticker
-@cli.command()
+@cli.command(short_help="Get the recommendations of a company or a cryptocurrency")
 @argument("ticker")
 @option("-n","--noprint","no_print",is_flag=True)
 @option("-c","--csv","csv",type=Path())
 @option("-x","--excel","excel",type=Path())
 def recommendations(ticker,no_print,csv,excel):
 
-  """"""
+  """
+  Get the recommendations of a company or a cryptocurrency
+
+  TICKER is the ticker that you want to track
+  NOPRINT is for disable the printing of the data
+  CSV is for saving the data in a csv file
+  EXCEL is for saving the data in a excel file
+  """
 
   # verify if recommendations exists
   if (ticker_recommendations:=Ticker(ticker).recommendations) is not None:
@@ -206,12 +263,16 @@ def recommendations(ticker,no_print,csv,excel):
   # otherwise show an error that recommendations didn't exists
 
 # create the command for getting the name of a ticker
-@cli.command()
+@cli.command(short_help="Identify the company or the cyptocurrency for a ticker")
 @argument("ticker")
 @option("-y","--crypto","crypto",is_flag=True)
 def whois(ticker,crypto):
 
-  """"""
+  """
+  Identify the company or the cyptocurrency for a ticker
+
+  CRYPTO is for enable the tickers for cryptocurrencies
+  """
 
   try: ticker_name=Ticker(f"{ticker}-usd").info["name"] if crypto else Ticker(ticker).info["shortName"]
   except KeyError: print_error(f"""Ticker: "{ticker.upper()}" doesn't exists!""")
