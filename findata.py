@@ -155,6 +155,7 @@ def mcap(ticker,crypto):
   """
   Get the market cap of a company or a cryptocurrency
 
+  TICKER is the ticker that you want to track
   CRYPTO is for enable the tickers for cryptocurrencies
   """
 
@@ -179,6 +180,7 @@ def news(ticker,_open):
   """
   Get the financial news for the given word
 
+  TICKER is the ticker that you want to track
   OPEN is for opening the news in the default browser
   """
 
@@ -198,6 +200,7 @@ def stock(ticker,crypto):
   """
   Get the price of a stock or the price of a cryptocurrency
 
+  TICKER is the ticker that you want to track
   CRYPTO is for enable the tickers for cryptocurrencies
   """
 
@@ -289,6 +292,7 @@ def whois(ticker,crypto):
   """
   Identify the company or the cyptocurrency for a ticker
 
+  TICKER is the ticker that you want to track
   CRYPTO is for enable the tickers for cryptocurrencies
   """
 
