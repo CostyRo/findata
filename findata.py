@@ -38,6 +38,9 @@ def custom(option=None,new_value=None):
   No OPTION will print all the option and their values
   """
 
+  with open("settings.json","r") as f: settings=load_json(f)
+  # load the settings in a dictionary
+
   if option is None:
     for key,value in settings.items(): echo(f"""Setting "{key}" have the value of "{value}".""")
     # if no argument is given, loop the settings and print the setting and the value of it
@@ -73,6 +76,9 @@ def earnings(ticker,no_print,plot,save_plot,csv,excel):
   CSV is for saving the data in a csv file
   EXCEL is for saving the data in a excel file
   """
+
+  with open("settings.json","r") as f: settings=load_json(f)
+  # load the settings in a dictionary
 
   # verify if earnings exists
   if not ((ticker_earnings:=Ticker(ticker).earnings).empty):
@@ -113,6 +119,9 @@ def history(ticker,crypto,no_print,plot,save_plot,csv,excel):
   EXCEL is for saving the data in a excel file
   """
 
+  with open("settings.json","r") as f: settings=load_json(f)
+  # load the settings in a dictionary
+
   ticker_history=(Ticker(f"{ticker}-usd") if crypto else Ticker(ticker)).history()
   # save the history about the ticker in a dictionary
 
@@ -148,6 +157,9 @@ def mcap(ticker,crypto):
 
   CRYPTO is for enable the tickers for cryptocurrencies
   """
+
+  with open("settings.json","r") as f: settings=load_json(f)
+  # load the settings in a dictionary
 
   ticker_info=(Ticker(f"{ticker}-usd") if crypto else Ticker(ticker)).info
   # save the info about the ticker in a dictionary
@@ -219,6 +231,9 @@ def qearnings(ticker,no_print,plot,save_plot,csv,excel):
   EXCEL is for saving the data in a excel file
   """
 
+  with open("settings.json","r") as f: settings=load_json(f)
+  # load the settings in a dictionary
+
   # verify if quarterly earnings exists
   if not ((ticker_qearnings:=Ticker(ticker).quarterly_earnings).empty):
     print_frame(ticker,no_print,ticker_qearnings,"Quarterly Earnings")
@@ -251,6 +266,9 @@ def recommendations(ticker,no_print,csv,excel):
   CSV is for saving the data in a csv file
   EXCEL is for saving the data in a excel file
   """
+
+  with open("settings.json","r") as f: settings=load_json(f)
+  # load the settings in a dictionary
 
   # verify if recommendations exists
   if (ticker_recommendations:=Ticker(ticker).recommendations) is not None:
@@ -286,9 +304,6 @@ if __name__=="__main__":
 
   rcParams.update({"figure.autolayout": True})
   # set autolayout to true to display the ploy correctly
-
-  with open("settings.json","r") as f: settings=load_json(f)
-  # load the settings in a dictionary
 
   cli()
   # start the cli app
