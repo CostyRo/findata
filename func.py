@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 
 # function for showing and saving the plot of the data frame
 def plotting(plot,save_plot):
-  """"""
+
+  """Function that plots and saves the dataframe"""
 
   if plot: plt.show()
   # if the user wants, show the plot
@@ -15,20 +16,22 @@ def plotting(plot,save_plot):
 
 def print_error(text):
 
-  """"""
+  """Function that prints a error"""
 
   secho(text,fg="red")
 
 # function for printing the data frame
 def print_frame(ticker,no_print,data_frame,title):
-  """"""
+
+  """Function that prints the dataframe"""
 
   if not no_print: echo(f"{ticker.upper()} {title}\n{data_frame}")
   # if the user didn't disable the printing, print the earnings
 
-# function for saving the data frame in different formats
+# function for saving the data frame in different file formats
 def save_frame(data_frame,csv,excel,csv_separator):
-  """"""
+
+  """Function that saves in different file formats, the dataframe"""
 
   if csv: data_frame.to_csv(csv,csv_separator)
   # if the user wants, save earnings into a csv
